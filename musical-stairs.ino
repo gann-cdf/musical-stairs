@@ -1,23 +1,21 @@
 /*
  * Musical Stairs
- * 
- * The core assumptions of this code mostly have to do with the sequence in which the 
- * XSHUT pins are wired together:
- * 
- *   1. All of the XSHUT pins are contiguous on the Arduino, starting at XSHUT_OFFSET.
+ *
+ * The core assumptions of this code mostly have to do with the sequence in
+ * which the XSHUT pins are wired together:
+ *
+ *   1. All of the XSHUT pins are contiguous on the Arduino, starting at
+ *      XSHUT_OFFSET.
  *   2. The pins are ordered L1, R1, L2, R2, ... , L10, R10
- *   
- * At the moment, we are triggering a note to be played if REQ_CONSECUTIVE_BREAKS consecutive
- * readings are broken (i.e. less than UNBROKEN_RANGE) following an unbroken reading.
- * 
- * We have also set a very short SENSOR_TIMEOUT since we will have to poll every sensor
- * every time, and waiting for a single sensor to timeout will impinge on the
- * responsiveness of the stairs overall.
- * 
- * FIXME There is also the possibility that both sensors might detect the same break,
- * which could trigger two simultaneous(ish) notes. This could be fixed by tracking which
- * stairs have been triggered _this round_ perhaps.
- * 
+ *
+ * At the moment, we are triggering a note to be played if
+ * REQ_CONSECUTIVE_BREAKS consecutive readings are broken (i.e. less than
+ * UNBROKEN_RANGE) following an unbroken reading.
+ *
+ * We have also set a very short SENSOR_TIMEOUT since we will have to poll
+ * every sensor every time, and waiting for a single sensor to timeout will
+ * impinge on the responsiveness of the stairs overall.
+ *
  * @author Seth Battis <sbattis@gannacademy.org>
  * @author Zachary Sherman <19zsherman@gannacademy.org>
  * @author Ilana Jacobs <19ijacobs@gannacademy.org>
@@ -60,7 +58,7 @@ const bool IGNORE_SENSOR[10][2] = {
 };
 
 // global variables
-MIDI_CREATE_DEFAULT_INSTANCE();
+MIDI_CREATE_DEFAULT_INSTANCE(); // initializes MIDI
 VL53L0X SENSOR[STAIRS][SIDES];
 bool HISTORY[STAIRS][SIDES][REQ_CONSECUTIVE_BREAKS]; // history runs from most recent (0) to least recent (REQ_CONSECUTIVE_BREAKS - 1)
 int STATE[STAIRS]; // store the loop counter for the most recent triggering of this step
@@ -139,7 +137,8 @@ int note(int stair) {
  * @param int stair Stair number [0..STAIRS)
  * @param int side Side [0..SIDES) or {LEFT, RIGHT}
  * @param int measurement The current measurement from that sensor
- * @return bool True if the beam is freshly broken by this reading, false otherwise
+ * @return bool True if the beam is freshly broken by this reading, false
+ *    otherwise
  */
 bool broken(int stair, int side, int measurement) {
  // is it a break in the beam?
@@ -168,7 +167,8 @@ bool broken(int stair, int side, int measurement) {
 
 /**
  * Play a note (if we're not logging to Serial Monitor)
- * TODO We could use multiple serial channels to allow MIDI and Serial Monitor logging
+ * TODO We could use multiple serial channels to allow MIDI and Serial Monitor
+ *    logging
  * @param int stair Stair number [0..STAIRS)
  */
 void playNote(int stair) {

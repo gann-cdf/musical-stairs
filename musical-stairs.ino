@@ -33,7 +33,7 @@ const int XSHUT_OFFSET = 2; // initial XSHUT pin (must be contiguous)
 const int REQ_CONSECUTIVE_BREAKS = 3; // number of consecutive broken readings to count as broken
 const int UNBROKEN_RANGE = 1100; // minimum "unbroken" distance for a sensor
 
-const int SERIAL_BAUD_RATE = 115200; // baud
+const long SERIAL_BAUD_RATE = 115200; // baud
 const int MIDI_CHANNEL = 4; // doesn't matter -- laptop listens to all channels
 const int MIDI_VELOCITY = 100; // how hard the note is struck [0..128)
 
@@ -174,6 +174,8 @@ bool broken(int stair, int side, int measurement) {
 void playNote(int stair) {
   if (!LOGGING) {
     MIDI.sendNoteOn(note(stair), MIDI_VELOCITY, MIDI_CHANNEL);
+  } else {
+    logging("Playing note for stair " + (String) stair);
   }
 }
 

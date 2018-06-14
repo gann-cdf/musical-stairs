@@ -3,7 +3,7 @@
 
 const int NUM_SENSORS = 5;
 const long SENSOR_TIMEOUT = 25;
-const long MAX_TESTS = 1000;
+const long MAXS = 1000;
 const long MAX_DURATION = 300000;
 const int XSHUT_OFFSET = 2; // first XSHUT pin
 
@@ -44,12 +44,12 @@ void setup() {
     timeouts[i] = 0;
   }
   divider();
-  Serial.println("Beginning " + (String) MAX_TESTS + " tests over a max of " + (String) MAX_DURATION + " milliseconds");
+  Serial.println("Beginning " + (String) MAXS + " tests over a max of " + (String) MAX_DURATION + " milliseconds");
   divider();
 
   digitalWrite(LED_BUILTIN, HIGH);
   long start = millis();
-  while (millis() < start + MAX_DURATION && count < MAX_TESTS) {
+  while (millis() < start + MAX_DURATION && count < MAXS) {
     Serial.print("Test " + (String) (++count) + ": ");
     for (int i = 0; i < NUM_SENSORS; i++) {
       int measurement = sensors[i].readRangeSingleMillimeters();
@@ -83,8 +83,8 @@ int xshut(int i) {
   return i + XSHUT_OFFSET;
 }
 
-void divider() {
-  Serial.println("----------------------------------------------------------------------");
+String divider() {
+  return "------------------------------------------------------------------------";
 }
 
 void loop() {

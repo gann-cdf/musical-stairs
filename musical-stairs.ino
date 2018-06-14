@@ -29,15 +29,16 @@
 const bool LOGGING = false; // show output logs in Serial Monitor
 
 const long SENSOR_TIMEOUT = 27; // milliseconds
-const int XSHUT_OFFSET = 2; // initial XSHUT pin (must be contiguous)
+const int XSHUT_OFFSET = 22; // initial XSHUT pin (must be contiguous)
 const int REQ_CONSECUTIVE_BREAKS = 3; // number of consecutive broken readings to count as broken
+const int DELAY_BEFORE_PLAY_AGAIN = 10; // loop iterations (scanning every sensor)
 const int UNBROKEN_RANGE = 1100; // minimum "unbroken" distance for a sensor
 
 const long SERIAL_BAUD_RATE = 115200; // baud
 const int MIDI_CHANNEL = 4; // doesn't matter -- laptop listens to all channels
 const int MIDI_VELOCITY = 100; // how hard the note is struck [0..128)
 
-const int STAIRS = 5; // number of stairs currently connected
+const int STAIRS = 6; // number of stairs currently connected
 const int SIDES = 2; // one sensor on each side of each stair
   // just reminders about how we understand the side indices
   const int LEFT = 0;
@@ -48,7 +49,7 @@ const bool IGNORE_SENSOR[10][2] = {
   {false, false}, // stair 1 (L1, R1)
   {false, false},
   {false, false},
-  { true, false},
+  {false, false},
   {false, false}, // stair 5 (L5, R5)
   {false, false},
   { true, false},
@@ -262,7 +263,7 @@ void loop() {
     for (int side = 0; side < SIDES; side++) {
       if (!IGNORE_SENSOR[stair][side] &&
           broken(stair, side, SENSOR[stair][side].readRangeSingleMillimeters()) &&
-          STATE[stair] < counter - REQ_CONSECUTIVE_BREAKS) {
+          STATE[stair] < counter - DELAY_BEFORE_PLAY_AGAIN) {
         STATE[stair] = counter;
         playNote(stair);
         logging("Play note for " + sensorName(stair, side));
@@ -270,4 +271,7 @@ void loop() {
     }
   }
   counter++;
+  if (counter >= 2147483647) {
+    counter = 0;
+  }
 }

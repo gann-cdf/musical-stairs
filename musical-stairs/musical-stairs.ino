@@ -120,13 +120,33 @@ int xshut(int sensorId) {
  * @param int stair Stair number [0..STAIRS)
  */
 int note(int stair) {
-  if (stair < 3) {
-    return 60 + (stair * 2);
-  } else if (stair < 7) {
-    return 59 + (stair * 2);
-  } else {
-    return 58 + stair * 2;
-  }
+// http://rcarduino.blogspot.com/2013/02/arduino-notes-frequencies-and-scales.html
+ switch(stair) {
+case 0:
+return 60;
+case 1:
+return 62;
+case 2:
+return 64;
+case 3:
+return 67;
+case 4:
+return 69;
+case 5:
+return 72;
+case 6:
+return 74;
+case 7:
+return 76;
+case 8:
+return 79;
+case 9:
+return 81;
+case 10:
+return 84;
+case 11:
+return 86;
+}
 }
 
 /**
